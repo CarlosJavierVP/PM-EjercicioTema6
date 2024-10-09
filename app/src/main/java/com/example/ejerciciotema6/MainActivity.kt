@@ -8,6 +8,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.ejerciciotema6.databinding.ActivityMainBinding
 import com.example.ejerciciotema6.model.Pelicula
 import com.example.ejerciciotema6.provider.PeliculaProvider
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var listaPeliculas:MutableList<Pelicula>
     //private var myRecyclerView: RecyclerView = findViewById(R.id.rvPeliculas)
     private lateinit var adapter: PeliculaAdapter
+    private lateinit var layoutManager: LayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +35,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         listaPeliculas = cargarLista()
+        layoutManager = LinearLayoutManager(this)
+        binding.rvPeliculas.layoutManager=layoutManager
+        adapter = PeliculaAdapter(listaPeliculas)
+        binding.rvPeliculas.adapter = adapter
+
     }
 
     private fun cargarLista():MutableList<Pelicula>{
