@@ -1,5 +1,6 @@
 package com.example.ejerciciotema6
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ejerciciotema6.model.Pelicula
@@ -7,14 +8,16 @@ import com.example.ejerciciotema6.model.Pelicula
 class PeliculaAdapter (private val listaPeli: List<Pelicula>) :
     RecyclerView.Adapter<PeliculaViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PeliculaViewHolder {
-        TODO("Not yet implemented")
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return PeliculaViewHolder(layoutInflater.inflate(R.layout.item_pelicula,parent,false))
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
+        return listaPeli.size
     }
 
     override fun onBindViewHolder(holder: PeliculaViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val item = listaPeli[position]
+        holder.render(item)
     }
 }
