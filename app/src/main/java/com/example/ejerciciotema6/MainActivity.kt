@@ -1,8 +1,10 @@
 package com.example.ejerciciotema6
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityMainBinding
     private lateinit var listaPeliculas:MutableList<Pelicula>
-    //private var myRecyclerView: RecyclerView = findViewById(R.id.rvPeliculas)
     private lateinit var adapter: PeliculaAdapter
     private lateinit var layoutManager: LayoutManager
 
@@ -37,10 +38,11 @@ class MainActivity : AppCompatActivity() {
         listaPeliculas = cargarLista()
         layoutManager = LinearLayoutManager(this)
         binding.rvPeliculas.layoutManager=layoutManager
-        adapter = PeliculaAdapter(listaPeliculas)
+        adapter = PeliculaAdapter(listaPeliculas){Pelicula -> onItemSelected(Pelicula)}
         binding.rvPeliculas.adapter = adapter
 
     }
+
 
     private fun cargarLista():MutableList<Pelicula>{
         val lista = mutableListOf<Pelicula>()
@@ -49,5 +51,13 @@ class MainActivity : AppCompatActivity() {
 
         }
         return lista
+    }
+
+    private fun onItemSelected(pelicula: Pelicula){
+        Toast.makeText(
+            this,
+            "Duración: ${pelicula.time} Año: ${pelicula.year}",
+            Toast.LENGTH_LONG
+        ).show()
     }
 }
