@@ -1,12 +1,16 @@
 package com.example.ejerciciotema6
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -38,8 +42,14 @@ class MainActivity : AppCompatActivity() {
         listaPeliculas = cargarLista()
         layoutManager = LinearLayoutManager(this)
         binding.rvPeliculas.layoutManager=layoutManager
-        adapter = PeliculaAdapter(listaPeliculas){Pelicula -> onItemSelected(Pelicula)}
+        adapter = PeliculaAdapter(listaPeliculas){pelicula ->
+            onItemSelected(pelicula)
+        }
         binding.rvPeliculas.adapter = adapter
+
+        //manejar los espacios entre los items del RecyclerView
+        binding.rvPeliculas.setHasFixedSize(true)
+        binding.rvPeliculas.itemAnimator = DefaultItemAnimator()
 
     }
 
@@ -48,7 +58,6 @@ class MainActivity : AppCompatActivity() {
         val lista = mutableListOf<Pelicula>()
         for (pelicula in PeliculaProvider.listaCarga){
             lista.add(pelicula)
-
         }
         return lista
     }
@@ -56,8 +65,50 @@ class MainActivity : AppCompatActivity() {
     private fun onItemSelected(pelicula: Pelicula){
         Toast.makeText(
             this,
-            "Duración: ${pelicula.time} Año: ${pelicula.year}",
+            "Duración: ${pelicula.time} minutos - Año: ${pelicula.year}",
             Toast.LENGTH_LONG
         ).show()
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.recargar ->{
+                recarga()
+                true
+            }
+
+            R.id.limpiar ->{
+                limpia()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun limpia(){
+        listaPeliculas.clear()
+        this.adapter.notifyItemRangeRemoved(0,listaPeliculas.size)
+        binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
+            onItemSelected(pelicula)
+        }
+    }
+
+    private fun recarga(){
+        listaPeliculas = cargarLista()
+        adapter.notifyItemRangeInserted(0,listaPeliculas.size)
+        binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){ pelicula ->
+            onItemSelected(pelicula)
+        }
+    }
+
+
+
+
+
+
 }
