@@ -1,30 +1,36 @@
 package com.example.ejerciciotema6
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSnapHelper
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.ejerciciotema6.databinding.ActivityMainBinding
 import com.example.ejerciciotema6.model.Pelicula
 import com.example.ejerciciotema6.provider.PeliculaProvider
+import com.google.android.material.snackbar.Snackbar
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding:ActivityMainBinding
     private lateinit var listaPeliculas:MutableList<Pelicula>
     private lateinit var adapter: PeliculaAdapter
     private lateinit var layoutManager: LayoutManager
+
+    private lateinit var intentLaunch:ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +56,19 @@ class MainActivity : AppCompatActivity() {
         //manejar los espacios entre los items del RecyclerView
         binding.rvPeliculas.setHasFixedSize(true)
         binding.rvPeliculas.itemAnimator = DefaultItemAnimator()
+/*
+        var titleMovie = findViewById<TextView>(R.id.tvTitle)
+
+        //preparar la variable intentLaunch para recibir los datos de la activity2
+        intentLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+            result: ActivityResult ->
+            if(result.resultCode== RESULT_OK){
+                title = result.data?.extras?.getString("titulo").toString()
+                titleMovie.text = "$title"
+            }
+        }
+
+ */
 
     }
 
@@ -107,8 +126,41 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    private fun display(message: String){
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
+    }
 
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val peliModificada: Pelicula = listaPeliculas[item.groupId]
 
+        when (item.itemId){
+            0 ->{
+                val alert = AlertDialog.Builder(this).setTitle("Eliminar ${peliModificada}")
+                    .setMessage("¿Estás seguro de que quieres eliminar ${peliModificada}?")
+                    .setNeutralButton("Cerrar",null)
+                    .setPositiveButton("Aceptar"){_,_ ->
+                        display("Se ha eliminado ${peliModificada.title}")
+                        listaPeliculas.removeAt(item.groupId)
+                        adapter.notifyItemRemoved(item.groupId)
+                        adapter.notifyItemRangeChanged(item.groupId, listaPeliculas.size)
+                        binding.rvPeliculas.adapter = PeliculaAdapter(listaPeliculas){pelicula ->
+                            onItemSelected(pelicula)
+                        }
+                    }.create()
+                alert.show()
+            }
+            else -> super.onContextItemSelected(item)
+        }
+        return true
+    }
+
+    override fun onClick(p0: View?) {
+        //invocar usando starActivity
+        val intent = Intent(this,MainActivity::class.java)
+        intent.putExtra("titulo", title)
+        intentLaunch.launch(intent)
+        //this.startActivity(intent)
+    }
 
 
 }
