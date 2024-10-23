@@ -3,4 +3,6 @@
     <string name="cambiar">Cambiar</string>
     <string name="cancelar">Cancelar</string>
     <string name="nuevo_titulo">Nuevo titulo</string>
+    <string name="recargar">Recargar</string>
+    <string name="limpiar">Limpiar</string>
 </resources>

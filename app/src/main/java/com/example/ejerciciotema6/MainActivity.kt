@@ -56,19 +56,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         //manejar los espacios entre los items del RecyclerView
         binding.rvPeliculas.setHasFixedSize(true)
         binding.rvPeliculas.itemAnimator = DefaultItemAnimator()
-/*
-        var titleMovie = findViewById<TextView>(R.id.tvTitle)
 
+
+        var titleMovie = findViewById<TextView>(R.id.tvTitle)
+        titleMovie.text="Datos no obtenidos"
         //preparar la variable intentLaunch para recibir los datos de la activity2
-        intentLaunch = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+        intentLaunch = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult())
+        {
             result: ActivityResult ->
             if(result.resultCode== RESULT_OK){
                 title = result.data?.extras?.getString("titulo").toString()
                 titleMovie.text = "$title"
             }
         }
-
- */
 
     }
 
@@ -88,6 +89,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Toast.LENGTH_LONG
         ).show()
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu,menu)
@@ -125,7 +128,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
     private fun display(message: String){
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
@@ -154,13 +156,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         return true
     }
 
-    override fun onClick(p0: View?) {
-        //invocar usando starActivity
-        val intent = Intent(this,MainActivity::class.java)
-        intent.putExtra("titulo", title)
-        intentLaunch.launch(intent)
-        //this.startActivity(intent)
-    }
+
+        override fun onClick(p0: View?) {
+            val intent = Intent(this,Activity2::class.java)
+            intent.putExtra("titulo", title)
+            intentLaunch.launch(intent)
+        }
+
+
 
 
 }

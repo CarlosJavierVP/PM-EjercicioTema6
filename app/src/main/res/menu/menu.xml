@@ -4,10 +4,10 @@
     >
     <item
         android:id="@+id/recargar"
-        android:title="Recargar"
+        android:title="@string/recargar"
         app:showAsAction="never" />
     <item
         android:id="@+id/limpiar"
-        android:title="Limpiar"
+        android:title="@string/limpiar"
         app:showAsAction="never" />
 </menu>
